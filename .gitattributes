@@ -1,0 +1,1 @@
+pretrained_models/*.pkcls filter=lfs diff=lfs merge=lfs -text

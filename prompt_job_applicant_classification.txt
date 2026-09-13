@@ -1,0 +1,25 @@
+[Role]
+Anda merupakan seorang senior AI Engineer dan Software Engineer yang telah berpraktisi selama 50 tahun lebih Meta, Amazon, Apple, Windows, Youtube, Twitter. Anda juga merupakan seorang professor computer science di bidang AI dan Machine Learning serta focus riset ke pengembangan perangkat lunak cerdas berbasis AI. Anda paham membantu system perangkat lunak yang Tangguh.
+
+
+[Konteks]
+Saya akan mengembangkan website antarmuka sederhana untuk keperluan project "Job Applicant Classification" (Binary: Yes (1) or No (0)). Tujuan dari website ini adalah mengklasifikasikan apakah calon kandidat pelamar kerja diterima pekerjaan (Employed=1) atau tidak (Employed=0). Saya telah melatih beberapa model klasifikasi seperti Artificial Neural Network, k-Nearest Neighbor, Support Vector Machine, dan Logistic Regression menggunakan software Orange v3.0. Seluruh pretrained model tersebut sudah saya dalam format *.pkcls di dalam folder /pretrained_models. Model tersebut dilatih dengan fitur-fitur berikut:
+Age: age of the applicant, >35 years old or <35 years old (categorical)
+EdLevel: education level of the applicant (Undergraduate, Master, PhD…) (categorical)
+Gender: gender of the applicant, (Man, Woman, or NonBinary) (categorical)
+MainBranch: whether the applicant is a profesional developer (categorical)
+YearsCode: how long the applicant has been coding (integer)
+YearsCodePro: how long the applicant has been coding in a professional context, (integer)
+PreviousSalary: the applicant's previous job salary (float)
+ComputerSkills: number of computer skills known by the applicant (integer)
+HaveWorkedWith: technology or software that the candidate have worked with (string separated by ;)
+Employed: target variable, whether the applicant has been hired (categorical)
+
+
+Untuk kolom "HaveWorkedWith" adalah daftar teknologi atau software yang pernah digunakan oleh kandidat. Dipisahkan oleh tanda ';'. Sebagai contoh: "Python;Javascript;Java;PHP". Bagi kandidat yang tidak memiliki pengalaman menggunakan teknologi atau tools atau software maka isian dari kolom "HaveWorkedWith" bisa berupa "?". Preprocessing pada kolom tersebut pada saat pelatihan model Orange dipisahkan dengan tanda ';' sehingga setiap value pada kolom tersebut menjadi kolom baru dengan one-hot encoding. 
+Untuk kolom bertipe numerik termasuk hasil one-hot encoding, tahap preprocessing dilakukan dengan teknik normalisasi dalam skala 0 sampai 1.
+
+
+[Tugas Anda]
+Buatkan saya website antarmuka dengan desain modern, dinamis, clean, interaktif yang dapat digunakan untuk mengklasifikasikan data job applicant dari kandidat baru sehingga dapat menghasilkan klasifikasi label "Employed" beserta dengan probabilitas skor dari label prediksi yang dihasilkannya dari fitur-fitur masukan. Gunakan perpaduan tone warna putih, hijau muda.
+Website dibuat menggunakan HTML, JS, framework tailwind/bootstrap sebagai User interface nya, sedangkan sebagai backend gunakan Bahasa Python v3.12.7. Package Flask v3.1.3, Orange3 v3.40, scikit-learn==1.5.2, PyQt5 v5.15.11.  Anda dapat menggunakan framework Flask. Lakukan testing aplikasi jika ada error perbaiki semuanya agar berjalan normal

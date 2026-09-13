@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Job Applicant Classification using Orange3 ML models">
+    <title>HireSight — Job Applicant Classification</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                        },
+                        surface: { DEFAULT: '#ffffff', alt: '#f8fafc' },
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💼</text></svg>">
+</head>
+
+<body class="bg-surface-alt text-slate-800 min-h-screen relative font-sans">
+
+    <!-- Background Elements -->
+    <div class="mesh-bg"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="relative z-10 min-h-screen flex flex-col">
+        <!-- HEADER -->
+        <header class="bg-white/80 backdrop-blur-md border-b border-slate-200/50 py-4 px-6 sticky top-0 z-50">
+            <div class="max-w-7xl mx-auto flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center text-xl shadow-lg shadow-brand-500/30">
+                        💼
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-extrabold tracking-tight text-slate-800">
+                            Hire<span class="text-brand-500">Sight</span>
+                        </h1>
+                        <p class="text-[11px] font-medium text-slate-500 uppercase tracking-widest mt-0.5">Applicant AI</p>
+                    </div>
+                </div>
+                <div class="hidden sm:flex items-center gap-2">
+                    <span class="chip">AI Screening</span>
+                    <span class="chip">Real-time</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- HERO SECTION -->
+        <section class="max-w-7xl mx-auto w-full px-6 pt-10 pb-8 fade-in">
+            <div class="text-center mb-10">
+                <h2 class="text-3xl md:text-5xl font-black tracking-tight mb-4 text-slate-800">
+                    Smart <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-500 to-emerald-400">Applicant</span> Classification
+                </h2>
+                <p class="text-slate-500 max-w-xl mx-auto text-sm md:text-base leading-relaxed">
+                    Predict candidate employability using advanced Machine Learning models. Enter candidate data below to generate an AI assessment.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 items-start">
+                
+                <!-- MAIN FORM (col-span-2) -->
+                <div class="xl:col-span-2 glass-card p-6 md:p-8 fade-in fade-in-delay-1">
+                    <form id="applicant-form" novalidate>
+                        
+                        <!-- MODEL SELECTOR -->
+                        <div class="mb-7">
+                            <div class="section-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M2 12h4M18 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+                                Select Classification Model
+                            </div>
+                            <div class="model-select-wrap">
+                                <select id="model-select" class="input-field font-medium">
+                                    <option value="" disabled selected>— Choose ML Model —</option>
+                                    {% for model_name in model_names %}
+                                    <option value="{{ model_name }}">{{ model_name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- DEMOGRAPHICS -->
+                        <div class="mb-7">
+                            <div class="section-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                                Demographics
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                                <div>
+                                    <label class="field-label">Age Group</label>
+                                    <div class="model-select-wrap">
+                                        <select name="Age" class="input-field" required>
+                                            <option value="" disabled selected>Select age</option>
+                                            <option value="&lt;35">Under 35</option>
+                                            <option value="&gt;35">35 or Older</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Gender</label>
+                                    <div class="model-select-wrap">
+                                        <select name="Gender" class="input-field" required>
+                                            <option value="" disabled selected>Select gender</option>
+                                            <option value="Man">Man</option>
+                                            <option value="Woman">Woman</option>
+                                            <option value="NonBinary">NonBinary</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Country</label>
+                                    <div class="model-select-wrap">
+                                        <select name="Country" class="input-field" required>
+                                            <option value="" disabled selected>Select country</option>
+                                            {% for country in countries %}
+                                            <option value="{{ country }}">{{ country }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Accessibility Needs?</label>
+                                    <div class="model-select-wrap">
+                                        <select name="Accessibility" class="input-field" required>
+                                            <option value="" disabled selected>Select status</option>
+                                            <option value="No">No</option>
+                                            <option value="Yes">Yes</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Mental Health Status</label>
+                                    <div class="model-select-wrap">
+                                        <select name="MentalHealth" class="input-field" required>
+                                            <option value="" disabled selected>Select status</option>
+                                            <option value="No">No Issue</option>
+                                            <option value="Yes">Has Issue</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- EDUCATION & EXPERIENCE -->
+                        <div class="mb-7">
+                            <div class="section-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+                                Education & Background
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                <div>
+                                    <label class="field-label">Education Level</label>
+                                    <div class="model-select-wrap">
+                                        <select name="EdLevel" class="input-field" required>
+                                            <option value="" disabled selected>Select degree</option>
+                                            <option value="Undergraduate">Undergraduate (Bachelor's)</option>
+                                            <option value="Master">Master's Degree</option>
+                                            <option value="PhD">PhD / Doctorate</option>
+                                            <option value="NoHigherEd">No Higher Education</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Main Branch</label>
+                                    <div class="model-select-wrap">
+                                        <select name="MainBranch" class="input-field" required>
+                                            <option value="" disabled selected>Professional Developer?</option>
+                                            <option value="Dev">Professional Developer</option>
+                                            <option value="NotDev">Not a Professional Developer</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Previous Employment</label>
+                                    <div class="model-select-wrap">
+                                        <select name="Employment" class="input-field" required>
+                                            <option value="" disabled selected>Currently Employed?</option>
+                                            <option value="1">Yes (Employed)</option>
+                                            <option value="0">No (Unemployed)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="field-label">Previous Salary (USD) <span class="text-slate-400 font-normal ml-1">1 - 224,000</span></label>
+                                    <input type="number" name="PreviousSalary" class="input-field" placeholder="e.g. 75000" min="1" max="224000" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- SKILLS -->
+                        <div class="mb-7">
+                            <div class="section-title">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                                Technical Skills
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-5">
+                                <div>
+                                    <label class="field-label">Years of Code <span class="text-slate-400 font-normal ml-1">0 - 50</span></label>
+                                    <input type="number" name="YearsCode" class="input-field" placeholder="e.g. 5" min="0" max="50" required>
+                                </div>
+                                <div>
+                                    <label class="field-label">Pro Years of Code <span class="text-slate-400 font-normal ml-1">0 - 50</span></label>
+                                    <input type="number" name="YearsCodePro" class="input-field" placeholder="e.g. 3" min="0" max="50" required>
+                                </div>
+                                <div>
+                                    <label class="field-label">Computer Skills count <span class="text-slate-400 font-normal ml-1">0 - 107</span></label>
+                                    <input type="number" name="ComputerSkills" class="input-field" placeholder="e.g. 10" min="0" max="107" required>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="field-label">Technologies Worked With</label>
+                                <p class="text-[11px] text-slate-500 mb-2">Separate with semicolon (;). E.g. <code>Python;JavaScript;React.js;AWS</code>. Leave blank if none.</p>
+                                <input type="text" name="HaveWorkedWith" class="input-field" placeholder="E.g. Python;Java;Docker">
+                            </div>
+                        </div>
+
+                        <!-- SUBMIT -->
+                        <button type="submit" id="btn-predict" class="btn-predict w-full flex justify-center items-center gap-2 mt-8">
+                            <span class="spinner"></span>
+                            <span class="btn-text flex items-center gap-2">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                                Run Classification
+                            </span>
+                            <span class="btn-text-loading">Processing Request...</span>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- RIGHT PANEL -->
+                <div class="space-y-6 fade-in fade-in-delay-2">
+                    
+                    <!-- Result Panel -->
+                    <div id="result-panel" class="glass-card p-6 hidden-panel">
+                        <!-- Filled via JS -->
+                    </div>
+
+                    <!-- Available Models -->
+                    <div class="glass-card p-6">
+                        <h3 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-2">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+                            Available Classifiers
+                        </h3>
+                        <div class="space-y-3">
+                            <div class="model-item">
+                                <div class="model-icon text-brand-600 bg-brand-100">🧠</div>
+                                <div>
+                                    <p class="model-title">Neural Network</p>
+                                    <p class="model-desc">Deep learning algorithm.</p>
+                                </div>
+                            </div>
+                            <div class="model-item">
+                                <div class="model-icon text-blue-600 bg-blue-100">📍</div>
+                                <div>
+                                    <p class="model-title">K-Nearest Neighbor</p>
+                                    <p class="model-desc">Similarity-based classification.</p>
+                                </div>
+                            </div>
+                            <div class="model-item">
+                                <div class="model-icon text-orange-600 bg-orange-100">⚡</div>
+                                <div>
+                                    <p class="model-title">Support Vector Machine</p>
+                                    <p class="model-desc">Optimal hyperplane separation.</p>
+                                </div>
+                            </div>
+                            <div class="model-item">
+                                <div class="model-icon text-emerald-600 bg-emerald-100">📈</div>
+                                <div>
+                                    <p class="model-title">Logistic Regression</p>
+                                    <p class="model-desc">Interpretable linear model.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FOOTER -->
+        <footer class="mt-auto border-t border-slate-200/50 py-6 px-6 text-center text-xs font-medium text-slate-500 bg-white/50 backdrop-blur-md">
+            <p>HireSight — AI for Business Demo Project</p>
+            <p class="mt-1 opacity-70">Built with Flask & Orange3 • Universitas Udayana</p>
+        </footer>
+    </div>
+
+    <!-- App JS -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
